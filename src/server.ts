@@ -62,7 +62,7 @@ function requireAllowedOrigin(request: Request, _response: Response, next: NextF
 }
 
 app.get("/health", (_request, response) => {
-  response.json({ ok: true, service: "smokehouse-pos-bridge", version: "0.2.0", capabilities: ["walk_in_pos_actions_v1"] });
+  response.json({ ok: true, service: "smokehouse-pos-bridge", version: "0.2.1", capabilities: ["walk_in_pos_actions_v1"] });
 });
 
 app.get("/printer/status", async (_request, response, next) => {

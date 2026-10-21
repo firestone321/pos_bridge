@@ -21,6 +21,9 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Install build dependencies
+        run: npm ci
+
       - name: Confirm tag matches package version
         shell: pwsh
         run: |

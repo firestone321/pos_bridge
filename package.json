@@ -1,6 +1,6 @@
 {
   "name": "smokehouse-pos-bridge",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Windows-local RAW ESC/POS bridge for Firestone Smokehouse POS hardware.",
   "type": "module",
