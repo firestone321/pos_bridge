@@ -1,0 +1,45 @@
+name: Publish Windows bridge release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Confirm tag matches package version
+        shell: pwsh
+        run: |
+          $package = Get-Content package.json -Raw | ConvertFrom-Json
+          if ("v$($package.version)" -ne $env:GITHUB_REF_NAME) {
+            throw "Tag $env:GITHUB_REF_NAME does not match package version $($package.version)."
+          }
+
+      - name: Build release archive
+        shell: pwsh
+        run: .\scripts\build-release.ps1 -OutputDirectory .\artifacts
+
+      - name: Publish release and verified updater assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          gh release create $env:GITHUB_REF_NAME `
+            .\artifacts\smokehouse-pos-bridge-*.zip `
+            .\artifacts\smokehouse-pos-bridge-*.zip.sha256 `
+            --title "Smokehouse POS Bridge $env:GITHUB_REF_NAME" `
+            --generate-notes

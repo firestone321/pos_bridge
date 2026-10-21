@@ -1,0 +1,39 @@
+{
+  "name": "smokehouse-pos-bridge",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Windows-local RAW ESC/POS bridge for Firestone Smokehouse POS hardware.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "test": "tsx --test tests/*.test.ts",
+    "printers": "tsx src/cli.ts printers",
+    "test:printer": "tsx src/cli.ts receipt",
+    "test:receipt": "tsx src/cli.ts receipt",
+    "test:sale-receipt": "tsx src/cli.ts sale-receipt",
+    "test:cut": "tsx src/cli.ts cut",
+    "test:drawer": "tsx src/cli.ts drawer",
+    "dev:token": "tsx src/cli.ts token"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "jose": "^6.0.12",
+    "pino": "^9.9.4",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.18.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
