@@ -61,8 +61,12 @@ function requireAllowedOrigin(request: Request, _response: Response, next: NextF
   next();
 }
 
+const offlineEnabled = process.env.OFFLINE_POS_ENABLED === "true";
+const offline = offlineEnabled ? await (await import("./offline/runtime.js")).startOffline(config, printer, error => logger.error({ err: error }, "Offline POS error")) : null;
+if (offline) app.use("/offline", offline.router);
+
 app.get("/health", (_request, response) => {
-  response.json({ ok: true, service: "smokehouse-pos-bridge", version: "0.2.1", capabilities: ["walk_in_pos_actions_v1"] });
+  response.json({ ok: true, service: "smokehouse-pos-bridge", version: "0.2.1", capabilities: ["walk_in_pos_actions_v1", ...(offline ? ["offline_cash_pos_v1"] : [])] });
 });
 
 app.get("/printer/status", async (_request, response, next) => {
@@ -165,7 +169,7 @@ const server = app.listen(config.port, "127.0.0.1", () => {
 
 function shutdown(signal: string): void {
   logger.info({ signal }, "Bridge shutting down");
-  server.close(() => process.exit(0));
+  server.close(() => { offline?.close(); process.exit(0); });
   setTimeout(() => process.exit(1), 10_000).unref();
 }
 

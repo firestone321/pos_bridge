@@ -54,7 +54,8 @@ test("concurrent claims execute once and corruption fails closed",async()=>{
     assert.equal(calls,1);
   }finally{await rm(dir,{recursive:true,force:true});}
 });
-test("shared printer queue preserves order, recovers from rejection and retains cooldown",async()=>{
+test("shared printer queue preserves order, recovers from rejection and retains cooldown",async(t)=>{
+  t.mock.method(Date,"now",()=>10000);
   const printer=new WindowsRawPosPrinter(config,logger);
   const calls:string[]=[];
   // Replace only the OS boundary. No PowerShell or physical hardware is executed.
